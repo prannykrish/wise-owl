@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { allWorks, allHonors, workHref } from '../lib/works';
+
+const works = await allWorks();
+const honors = allHonors(works);
+const years = [...new Set(honors.map((h) => h.year))];
+const workCount = new Set(honors.map((h) => h.work.id)).size;
+---
+
+<Base title="Honors">
+  <div class="wrap">
+  <section class="page-head">
+    <h1 class="page-title">Honors</h1>
+    {
+      honors.length > 0 && (
+        <p class="label mute">
+          {honors.length} {honors.length === 1 ? 'honor' : 'honors'} across {workCount} {workCount === 1 ? 'work' : 'works'}
+        </p>
+      )
+    }
+  </section>
+
+  {
+    honors.length === 0 ? (
+      <p class="empty">Nothing yet.</p>
+    ) : (
+      <ol class="honor-years">
+        {years.map((y) => (
+          <li class="year-group">
+            <span class="mono year">{y}</span>
+            <ol>
+              {honors
+                .filter((h) => h.year === y)
+                .map((h) => (
+                  <li class="honor-row">
+                    <span class="award">{h.award}</span>
+                    <span class="mono mute body">{h.body}</span>
+                    <a class="work" href={workHref(h.work)}>
+                      {h.work.data.title}
+                    </a>
+                  </li>
+                ))}
+            </ol>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+  </div>
+</Base>

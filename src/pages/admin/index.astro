@@ -1,0 +1,19 @@
+---
+// The admin shell. Decap CMS reads /admin/config.yml, which lives in public/,
+// and edits the files in this repo. This is an Astro page rather than a file
+// in public/ so the dev server answers /admin/ instead of the catch-all route.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Wise Owl · Admin</title>
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  </head>
+  <body>
+    <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </body>
+</html>

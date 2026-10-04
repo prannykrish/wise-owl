@@ -1,0 +1,957 @@
+/* ---------------------------------------------------------------------------
+   Wise Owl. One palette, two typefaces, no decoration.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* Paper and velvet are taken from the logo file, so it sits on the page without a seam. */
+  --paper: #f3efe6;
+  --paper-2: #eae5da;
+  --ink: #171512;
+  --velvet: #7e1b2b;
+  --mute: #6f6a62;
+  --rule: #dcd5c9;
+
+  --serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --measure: 64ch;
+  --nav-h: 68px;
+  --logo-h: 48px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.5;
+  font-feature-settings: 'kern', 'liga';
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+img,
+svg,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p,
+h1,
+h2,
+h3,
+dl,
+dd {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+}
+
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.95em;
+}
+
+::selection {
+  background: var(--velvet);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 1px solid var(--velvet);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Primitives
+   --------------------------------------------------------------------------- */
+
+.wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.mute {
+  color: var(--mute);
+}
+
+.page-title {
+  font-size: clamp(44px, 7vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.page-head {
+  padding: clamp(40px, 7vw, 96px) 0 clamp(24px, 4vw, 48px);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Nav and footer. Links left and right, the logo alone in the middle.
+   --------------------------------------------------------------------------- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+}
+
+/* No rule under the nav. Content fades out beneath it instead of hitting an edge. */
+.nav::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 28px;
+  background: linear-gradient(var(--paper), transparent);
+  pointer-events: none;
+}
+
+.nav-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: var(--nav-h);
+}
+
+.nav .mark {
+  display: inline-flex;
+  justify-self: center;
+}
+
+.nav .mark img {
+  height: var(--logo-h);
+  width: auto;
+}
+
+.nav nav {
+  display: flex;
+  gap: clamp(14px, 2.4vw, 32px);
+}
+
+.nav .nav-right {
+  justify-content: flex-end;
+}
+
+.nav nav a {
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.nav nav a:hover,
+.nav nav a.active {
+  color: var(--velvet);
+}
+
+@media (max-width: 480px) {
+  .nav nav {
+    gap: 12px;
+  }
+
+  .nav nav a {
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* The footer mirrors the nav: links left and right, the wordmark in the middle, one colophon line under. No rules. */
+.footer {
+  padding: clamp(40px, 6vw, 80px) 0 clamp(32px, 4vw, 48px);
+}
+
+.footer-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+}
+
+.footer-row nav {
+  display: flex;
+  gap: clamp(14px, 2.4vw, 32px);
+}
+
+.footer-row .footer-right {
+  justify-content: flex-end;
+}
+
+.footer-mark {
+  display: block;
+  width: min(60vw, 240px);
+  justify-self: center;
+}
+
+.footer-mark img {
+  width: 100%;
+  height: auto;
+}
+
+.footer a:hover {
+  color: var(--velvet);
+}
+
+.colophon {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 0.6em;
+  margin-top: clamp(28px, 4vw, 48px);
+}
+
+.colophon > * + *::before {
+  content: '·';
+  margin-right: 0.6em;
+}
+
+@media (max-width: 760px) {
+  .footer-row {
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      'mark mark'
+      'left right';
+    justify-content: center;
+    gap: 28px 24px;
+  }
+
+  .footer-mark {
+    grid-area: mark;
+  }
+
+  .footer-row .footer-left {
+    grid-area: left;
+    justify-content: flex-end;
+  }
+
+  .footer-row .footer-right {
+    grid-area: right;
+    justify-content: flex-start;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hero. One frame from the featured work, filling the first screen.
+   --------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: calc(100dvh - var(--nav-h));
+  min-height: 440px;
+  background: var(--ink);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.hero img,
+.hero video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(23, 21, 18, 0.7), rgba(23, 21, 18, 0) 48%);
+}
+
+.hero-text {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: clamp(24px, 4vw, 52px);
+  display: grid;
+  gap: 12px;
+}
+
+.hero-text .label {
+  color: rgba(243, 239, 230, 0.78);
+}
+
+.hero-title {
+  font-size: clamp(40px, 6.5vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+/* Under the hero the nav's fade would show as a haze on the image. */
+.has-hero .nav::after {
+  display: none;
+}
+
+.has-hero .catalog {
+  padding-top: clamp(40px, 6vw, 88px);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Index
+   --------------------------------------------------------------------------- */
+
+.catalog {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 34%);
+  gap: clamp(32px, 5vw, 96px);
+  align-items: start;
+  padding-bottom: clamp(64px, 8vw, 128px);
+}
+
+.tabs {
+  display: flex;
+  gap: 22px;
+  align-items: baseline;
+  padding-bottom: 14px;
+}
+
+.tabs a:hover {
+  color: var(--velvet);
+}
+
+.tabs a.active {
+  color: var(--velvet);
+}
+
+.tabs .count {
+  margin-left: auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr) 9em 3.2em;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.rows li:last-child .row {
+  border-bottom: 1px solid var(--rule);
+}
+
+.row .title {
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  transition: color 0.15s ease;
+}
+
+.row:hover .title,
+.row:focus-visible .title {
+  color: var(--velvet);
+}
+
+.row .no {
+  color: var(--mute);
+}
+
+.row .form,
+.row .year {
+  color: var(--mute);
+}
+
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--velvet);
+}
+
+.panel {
+  position: sticky;
+  top: calc(var(--nav-h) + 32px);
+}
+
+.frame {
+  background: var(--paper-2);
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.frame[data-medium='music'] img {
+  object-fit: contain;
+}
+
+.frame .panel-text {
+  padding: clamp(20px, 2.4vw, 36px);
+  font-size: clamp(18px, 1.5vw, 24px);
+  font-style: italic;
+  line-height: 1.35;
+  align-self: start;
+  justify-self: start;
+}
+
+.frame [hidden] {
+  display: none;
+}
+
+.panel .caption {
+  margin-top: 12px;
+}
+
+@media (max-width: 860px) {
+  .catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'no year'
+      'title title'
+      'form form';
+    gap: 4px 12px;
+  }
+
+  .row .no {
+    grid-area: no;
+  }
+  .row .year {
+    grid-area: year;
+  }
+  .row .title {
+    grid-area: title;
+    padding: 2px 0 4px;
+  }
+  .row .form {
+    grid-area: form;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Record page (shared by film, writing and music)
+   --------------------------------------------------------------------------- */
+
+.record {
+  padding-bottom: clamp(64px, 8vw, 128px);
+}
+
+.band {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  max-height: 72vh;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+
+.band img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.record-head {
+  padding-top: clamp(32px, 5vw, 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.record.music .record-head {
+  grid-template-columns: minmax(200px, 400px) minmax(0, 1fr);
+}
+
+.record .cover {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: var(--paper-2);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.6em;
+  color: var(--mute);
+}
+
+.meta span + span::before {
+  content: '·';
+  margin-right: 0.6em;
+}
+
+.record-title {
+  font-size: clamp(44px, 7vw, 104px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-top: 14px;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+.byline {
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-style: italic;
+  margin-top: 20px;
+}
+
+.logline {
+  font-size: clamp(19px, 1.6vw, 23px);
+  line-height: 1.4;
+  max-width: 40ch;
+  margin-top: 22px;
+}
+
+.play {
+  margin-top: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ink);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.play:hover {
+  color: var(--velvet);
+  border-color: var(--velvet);
+}
+
+.links {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.6em;
+}
+
+.links a:hover {
+  color: var(--velvet);
+}
+
+.links a + a::before {
+  content: '·';
+  margin-right: 0.6em;
+  color: var(--mute);
+}
+
+/* Optional notes under a record. */
+.prose {
+  max-width: var(--measure);
+  font-size: 18px;
+  line-height: 1.55;
+  margin-top: clamp(40px, 6vw, 88px);
+}
+
+.prose p + p {
+  margin-top: 1em;
+}
+
+.prose h2 {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin: 2.6em 0 1.4em;
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+.player {
+  width: 100%;
+  border: 0;
+  margin-top: 40px;
+  min-height: 160px;
+}
+
+.tracks {
+  margin-top: clamp(32px, 4vw, 56px);
+  max-width: 560px;
+}
+
+.tracks li {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 9px 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.tracks li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.record-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(32px, 4vw, 64px);
+  margin-top: clamp(40px, 6vw, 88px);
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.record-grid h2 {
+  margin-bottom: 18px;
+}
+
+.credits {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 8px 24px;
+}
+
+.credits dt {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding-top: 0.4em;
+}
+
+.honor-list li {
+  display: grid;
+  grid-template-columns: 3.5em minmax(0, 1fr);
+  gap: 16px;
+  padding: 9px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.honor-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.honor-list .award {
+  display: block;
+}
+
+.honor-list .body {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+
+.related li + li {
+  margin-top: 8px;
+}
+
+.related a:hover .t {
+  color: var(--velvet);
+}
+
+.related .t {
+  font-size: 20px;
+}
+
+.stills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: clamp(40px, 6vw, 88px);
+}
+
+.stills img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  background: var(--paper-2);
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: clamp(56px, 8vw, 112px);
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.pager a {
+  display: grid;
+  gap: 6px;
+}
+
+.pager .next {
+  text-align: right;
+}
+
+.pager .t {
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.15;
+  transition: color 0.15s ease;
+}
+
+.pager a:hover .t {
+  color: var(--velvet);
+}
+
+.placeholder-note {
+  margin-top: 48px;
+}
+
+@media (max-width: 760px) {
+  .record.music .record-head {
+    grid-template-columns: 1fr;
+  }
+
+  .record .cover {
+    max-width: 320px;
+  }
+
+  .stills {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   The dark room. The only place the palette flips.
+   --------------------------------------------------------------------------- */
+
+.theater {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--paper);
+  opacity: 0;
+  transition: opacity 0.65s ease;
+}
+
+.theater.on {
+  opacity: 1;
+}
+
+.theater[hidden] {
+  display: none;
+}
+
+.theater .screen {
+  width: min(92vw, calc((100dvh - 160px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+}
+
+.theater .screen iframe,
+.theater .screen video,
+.theater .screen img {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.theater .screen video {
+  object-fit: contain;
+}
+
+.theater .lights-up {
+  position: absolute;
+  top: 20px;
+  right: var(--gutter);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--paper);
+}
+
+.theater .lights-up:hover {
+  color: var(--velvet);
+  border-color: var(--velvet);
+}
+
+.theater .note {
+  position: absolute;
+  bottom: 24px;
+  left: var(--gutter);
+  color: var(--mute);
+}
+
+/* ---------------------------------------------------------------------------
+   Honors and Studio
+   --------------------------------------------------------------------------- */
+
+.year-group {
+  display: grid;
+  grid-template-columns: 5em minmax(0, 1fr);
+  gap: 24px;
+  padding: 22px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.year-group:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.year-group .year {
+  padding-top: 0.3em;
+}
+
+.honor-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 24px;
+  padding: 8px 0;
+  align-items: baseline;
+}
+
+.honor-row .award {
+  font-size: clamp(19px, 1.6vw, 22px);
+  line-height: 1.25;
+}
+
+.honor-row .work {
+  font-style: italic;
+  font-size: clamp(18px, 1.5vw, 21px);
+  transition: color 0.15s ease;
+}
+
+.honor-row .work:hover {
+  color: var(--velvet);
+}
+
+@media (max-width: 760px) {
+  .year-group {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .honor-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 12px 0;
+  }
+}
+
+.studio {
+  padding: clamp(48px, 9vw, 128px) 0 clamp(64px, 8vw, 128px);
+}
+
+.studio-body {
+  max-width: 44ch;
+  margin-top: clamp(32px, 5vw, 64px);
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.4;
+}
+
+.studio-body p + p {
+  margin-top: 1em;
+}
+
+.studio-body a {
+  border-bottom: 1px solid var(--rule);
+}
+
+.studio-body a:hover {
+  color: var(--velvet);
+  border-color: var(--velvet);
+}
+
+.studio-meta {
+  margin-top: clamp(40px, 6vw, 72px);
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.empty {
+  padding: clamp(48px, 9vw, 128px) 0;
+  font-size: clamp(22px, 2.4vw, 32px);
+}

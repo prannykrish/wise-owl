@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import Catalog from '../components/Catalog.astro';
+import { allWorks, workHref, catalogNumber, MEDIUMS } from '../lib/works';
+
+const works = await allWorks();
+
+/** The hero shows the featured work. The catalog panel then defaults to the next one, so the first screen never repeats itself. */
+const featured = works.find((w) => w.data.featured) ?? works[0];
+const panelDefault = works.find((w) => w.id !== featured?.id);
+---
+
+<Base bodyClass="has-hero">
+  <h1 class="visually-hidden">Wise Owl</h1>
+
+  {
+    featured && (
+      <a class="hero" href={workHref(featured)}>
+        {featured.data.heroVideo ? (
+          <video autoplay muted loop playsinline poster={featured.data.image}>
+            <source src={featured.data.heroVideo} />
+          </video>
+        ) : (
+          featured.data.image && <img src={featured.data.image} alt="" fetchpriority="high" />
+        )}
+        <span class="hero-text wrap">
+          <span class="label">
+            {catalogNumber(featured.data.number)} · {MEDIUMS[featured.data.medium].singular} · {featured.data.year}
+          </span>
+          <span class="hero-title">{featured.data.title}</span>
+        </span>
+      </a>
+    )
+  }
+
+  <div class="wrap">
+    <Catalog works={works} active="all" defaultWork={panelDefault} />
+  </div>
+</Base>

@@ -1,0 +1,202 @@
+# Decap CMS configuration. The admin lives at /admin and edits the files in this repo.
+#
+# Locally: `npm run admin` starts the site and a small file server, and the admin
+# writes straight to src/content/works and src/data/site.json with no login.
+#
+# Once the site is deployed, the admin can also run on the live site by
+# committing through GitHub. That needs the repo name below and a GitHub OAuth
+# app (Netlify provides one for free). Until then, edit locally and push.
+
+local_backend: true
+
+backend:
+  name: github
+  repo: OWNER/wise-owl # replace with the GitHub repo once it exists
+  branch: main
+
+media_folder: public/stills
+public_folder: /stills
+
+logo_url: /wordmark_red-velvet.svg
+site_url: /
+display_url: /
+
+editor:
+  preview: false
+
+collections:
+  - name: works
+    label: Catalog
+    label_singular: Work
+    description: Every film and record. One entry per work.
+    folder: src/content/works
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    identifier_field: title
+    summary: 'WO {{fields.number}} · {{title}} · {{fields.year}}'
+    sortable_fields: [number, year, title, medium]
+    view_groups:
+      - label: Medium
+        field: medium
+    fields:
+      - label: Catalog number
+        name: number
+        widget: number
+        value_type: int
+        min: 1
+        hint: WO 001 is the first thing the studio released. Number in release order.
+      - label: Title
+        name: title
+        widget: string
+      - label: Medium
+        name: medium
+        widget: select
+        options:
+          - { label: Film, value: film }
+          - { label: Music, value: music }
+      - label: Form
+        name: form
+        widget: string
+        hint: 'Feature, Short, Music video, Album, EP, Single, Score.'
+      - label: Year
+        name: year
+        widget: number
+        value_type: int
+      - label: By
+        name: by
+        widget: list
+        required: false
+        collapsed: false
+        summary: '{{fields.name}}'
+        field: { label: Name, name: name, widget: string }
+        hint: Director or artist. Shown as the byline.
+      - label: Logline
+        name: logline
+        widget: text
+        required: false
+        hint: One or two sentences. Facts, not adjectives.
+      - label: Runtime, minutes
+        name: runtime
+        widget: number
+        value_type: int
+        required: false
+        hint: Films only.
+      - label: Main still or cover
+        name: image
+        widget: image
+        required: false
+        hint: Shown on hover in the index and at the top of the record. Landscape for films, square for music.
+      - label: More stills
+        name: stills
+        widget: list
+        required: false
+        collapsed: false
+        summary: '{{fields.still}}'
+        field: { label: Still, name: still, widget: image }
+        hint: Films. The strip at the bottom of the record.
+      - label: Credits
+        name: credits
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{fields.role}}'
+        fields:
+          - { label: Role, name: role, widget: string }
+          - label: Names
+            name: names
+            widget: list
+            collapsed: false
+            summary: '{{fields.name}}'
+            field: { label: Name, name: name, widget: string }
+      - label: Honors
+        name: honors
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{fields.award}}, {{fields.body}}, {{fields.year}}'
+        hint: Every honor listed here also appears on the Honors page.
+        fields:
+          - { label: Award, name: award, widget: string, hint: 'For example: Best Short Film' }
+          - { label: Given by, name: body, widget: string, hint: 'The festival or body. For example: Tribeca Festival' }
+          - { label: Year, name: year, widget: number, value_type: int }
+      - label: Video
+        name: video
+        widget: string
+        required: false
+        hint: Films. A YouTube or Vimeo link, or a direct .mp4 link. Plays on the site when Play is pressed.
+      - label: Front page clip
+        name: heroVideo
+        widget: string
+        required: false
+        hint: Optional. A direct .mp4 or .webm link to a silent loop. Only used when this work is featured.
+      - label: Player
+        name: player
+        widget: string
+        required: false
+        hint: Music. Paste a Spotify, Apple Music or SoundCloud link, or a Bandcamp embed URL. A player appears on the page.
+      - label: Tracklist
+        name: tracklist
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{fields.title}} · {{fields.duration}}'
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Duration, name: duration, widget: string, hint: 'For example: 4:12' }
+      - label: Links
+        name: links
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{fields.label}}'
+        hint: Outbound links. Streaming services, where a piece was published, and so on.
+        fields:
+          - { label: Label, name: label, widget: string }
+          - { label: URL, name: url, widget: string }
+      - label: Related works
+        name: related
+        widget: relation
+        collection: works
+        value_field: '{{slug}}'
+        search_fields: [title]
+        display_fields: ['{{title}}']
+        multiple: true
+        required: false
+        hint: A film and its score, for example. Each side links to the other.
+      - label: Featured
+        name: featured
+        widget: boolean
+        default: false
+        hint: Fills the front page. Only one work should be featured.
+      - label: Placeholder
+        name: placeholder
+        widget: boolean
+        default: false
+        hint: Marks a template entry. Turn off for real work.
+      - label: Notes
+        name: body
+        widget: markdown
+        required: false
+        hint: Optional. Anything written here appears under the record.
+
+  - name: studio
+    label: Studio
+    description: The details that appear in the footer and on the Studio page.
+    files:
+      - name: site
+        label: Studio details
+        file: src/data/site.json
+        fields:
+          - { label: Studio name, name: name, widget: string }
+          - { label: Email, name: email, widget: string }
+          - { label: City, name: city, widget: string }
+          - { label: Established, name: established, widget: number, value_type: int }
+          - label: Studio page
+            name: studio
+            widget: list
+            collapsed: false
+            summary: '{{fields.paragraph}}'
+            field: { label: Paragraph, name: paragraph, widget: text }
+            hint: The paragraphs on the Studio page, in order.

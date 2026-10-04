@@ -1,0 +1,10 @@
+{
+  "name": "Wise Owl Productions",
+  "email": "hello@wiseowl.example",
+  "city": "Plano, Texas",
+  "established": 2026,
+  "studio": [
+    "Wise Owl is a production studio. It makes films and music, and keeps all of it in one catalog.",
+    "It was founded in 2026 in Plano, Texas, by Pranav Krishnan."
+  ]
+}

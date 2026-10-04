@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import Catalog from '../../components/Catalog.astro';
+import { MEDIUMS, allWorks, mediumFromPath, type Medium } from '../../lib/works';
+
+export async function getStaticPaths() {
+  return (Object.keys(MEDIUMS) as Medium[]).map((k) => ({ params: { medium: MEDIUMS[k].path } }));
+}
+
+const medium = mediumFromPath(Astro.params.medium)!;
+const works = (await allWorks()).filter((w) => w.data.medium === medium);
+---
+
+<Base title={MEDIUMS[medium].label}>
+  <div class="wrap">
+    <section class="page-head">
+      <h1 class="page-title">{MEDIUMS[medium].label}</h1>
+    </section>
+    <Catalog works={works} active={medium} />
+  </div>
+</Base>

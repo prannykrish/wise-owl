@@ -1,0 +1,266 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { MEDIUMS, allWorks, workHref, catalogNumber, joinNames, embedSrc, playerSrc, type Work } from '../../lib/works';
+
+export async function getStaticPaths() {
+  const works = await getCollection('works');
+  return works.map((work) => ({
+    params: { medium: MEDIUMS[work.data.medium].path, slug: work.id },
+    props: { work },
+  }));
+}
+
+const { work } = Astro.props as { work: Work };
+const d = work.data;
+const { Content } = await render(work);
+const hasNotes = Boolean(work.body && work.body.trim().length > 0);
+
+const all = await allWorks();
+const i = all.findIndex((w) => w.id === work.id);
+const newer = i > 0 ? all[i - 1] : null;
+const older = i < all.length - 1 ? all[i + 1] : null;
+const related = all.filter((w) => d.related.includes(w.id));
+
+const meta = [
+  catalogNumber(d.number),
+  MEDIUMS[d.medium].singular,
+  d.form,
+  String(d.year),
+  d.runtime ? `${d.runtime} min` : null,
+].filter((x): x is string => Boolean(x));
+
+const video = embedSrc(d.video);
+const player = playerSrc(d.player);
+---
+
+<Base title={d.title} description={d.logline} bodyClass={d.medium === 'film' && d.image ? 'has-hero' : undefined}>
+  <article class:list={['record', d.medium]}>
+    {
+      d.medium === 'film' && d.image && (
+        <div class="band">
+          <img src={d.image} alt="" />
+        </div>
+      )
+    }
+
+    <div class="wrap">
+      <header class="record-head">
+        {d.medium === 'music' && d.image && <img class="cover" src={d.image} alt={`${d.title}, cover`} />}
+        <div class="record-intro">
+          <p class="label meta">{meta.map((m) => <span>{m}</span>)}</p>
+          <h1 class="record-title">{d.title}</h1>
+          {d.by.length > 0 && <p class="byline">{MEDIUMS[d.medium].byline} {joinNames(d.by)}</p>}
+          {d.logline && <p class="logline">{d.logline}</p>}
+          {
+            d.medium === 'film' && (
+              <button class="play" type="button" data-lights>
+                <span class="dot" aria-hidden="true" />
+                Play
+              </button>
+            )
+          }
+          {
+            d.links.length > 0 && (
+              <p class="links label">
+                {d.links.map((l) => (
+                  <a href={l.url} target="_blank" rel="noopener">
+                    {l.label}
+                  </a>
+                ))}
+              </p>
+            )
+          }
+        </div>
+      </header>
+
+      {
+        player && (
+          <iframe
+            class="player"
+            src={player.src}
+            style={`height:${player.height}px`}
+            title={`${d.title}, player`}
+            loading="lazy"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          />
+        )
+      }
+      {
+        d.tracklist.length > 0 && (
+          <ol class="tracks">
+            {d.tracklist.map((t, n) => (
+              <li>
+                <span class="mono mute">{String(n + 1).padStart(2, '0')}</span>
+                <span>{t.title}</span>
+                <span class="mono mute">{t.duration}</span>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+
+      {
+        (d.credits.length > 0 || d.honors.length > 0 || related.length > 0) && (
+          <div class="record-grid">
+            {d.credits.length > 0 && (
+              <section>
+                <h2 class="label mute">Credits</h2>
+                <dl class="credits">
+                  {d.credits.map((c) => (
+                    <>
+                      <dt>{c.role}</dt>
+                      <dd>{joinNames(c.names)}</dd>
+                    </>
+                  ))}
+                </dl>
+              </section>
+            )}
+            {d.honors.length > 0 && (
+              <section>
+                <h2 class="label mute">Honors</h2>
+                <ul class="honor-list">
+                  {d.honors.map((h) => (
+                    <li>
+                      <span class="mono mute">{h.year}</span>
+                      <span>
+                        <span class="award">{h.award}</span>
+                        <span class="body">{h.body}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            {related.length > 0 && (
+              <section>
+                <h2 class="label mute">Related</h2>
+                <ul class="related">
+                  {related.map((r) => (
+                    <li>
+                      <a href={workHref(r)}>
+                        <span class="mono mute">{catalogNumber(r.data.number)}</span> <span class="t">{r.data.title}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
+        )
+      }
+
+      {
+        d.stills.length > 0 && (
+          <div class="stills">
+            {d.stills.map((s) => (
+              <img src={s} alt="" loading="lazy" />
+            ))}
+          </div>
+        )
+      }
+
+      {
+        hasNotes && (
+          <div class="prose">
+            <Content />
+          </div>
+        )
+      }
+
+      <nav class="pager" aria-label="Catalog order">
+        {
+          older ? (
+            <a class="prev" href={workHref(older)}>
+              <span class="label mute">Previous</span>
+              <span class="t">{older.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          newer ? (
+            <a class="next" href={workHref(newer)}>
+              <span class="label mute">Next</span>
+              <span class="t">{newer.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+      </nav>
+
+      {d.placeholder && <p class="label mute placeholder-note">Placeholder entry, for layout only. Replace with your own work.</p>}
+    </div>
+  </article>
+
+  {
+    d.medium === 'film' && (
+      <div class="theater" hidden data-src={video ?? ''}>
+        <button class="lights-up label" type="button" data-lights-up>
+          Lights up
+        </button>
+        <div class="screen">{!video && d.image && <img src={d.image} alt="" />}</div>
+        {!video && (
+          <p class="label note">
+            No video linked yet. Add a <code>video</code> URL to this entry.
+          </p>
+        )}
+      </div>
+    )
+  }
+</Base>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-lights]');
+  const theater = document.querySelector<HTMLElement>('.theater');
+
+  if (button && theater) {
+    const screen = theater.querySelector<HTMLElement>('.screen')!;
+    const lightsUp = theater.querySelector<HTMLButtonElement>('[data-lights-up]')!;
+    const src = theater.dataset.src || '';
+    const isFile = /\.(mp4|webm|m4v|mov|ogv)(\?.*)?$/i.test(src);
+    let timer: number | undefined;
+
+    const open = () => {
+      window.clearTimeout(timer);
+      theater.hidden = false;
+      if (src && !screen.querySelector('iframe, video')) {
+        if (isFile) {
+          const v = document.createElement('video');
+          v.src = src;
+          v.controls = true;
+          v.autoplay = true;
+          v.playsInline = true;
+          screen.appendChild(v);
+        } else {
+          const frame = document.createElement('iframe');
+          frame.src = src;
+          frame.title = 'Video';
+          frame.allow = 'autoplay; fullscreen; picture-in-picture';
+          screen.appendChild(frame);
+        }
+      }
+      requestAnimationFrame(() => requestAnimationFrame(() => theater.classList.add('on')));
+      document.body.style.overflow = 'hidden';
+      lightsUp.focus();
+    };
+
+    const close = () => {
+      theater.classList.remove('on');
+      document.body.style.overflow = '';
+      timer = window.setTimeout(() => {
+        theater.hidden = true;
+        screen.querySelector('iframe, video')?.remove();
+      }, 650);
+      button.focus();
+    };
+
+    button.addEventListener('click', open);
+    lightsUp.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !theater.hidden) close();
+    });
+  }
+</script>

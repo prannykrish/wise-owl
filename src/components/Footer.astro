@@ -1,0 +1,43 @@
+---
+/**
+ * The footer mirrors the nav: catalog links left, studio links right, the
+ * wordmark alone in the middle, then one colophon line. The wordmark file is
+ * used exactly as supplied. Contact details come from src/data/site.json.
+ */
+import site from '../data/site.json';
+
+const year = new Date().getFullYear();
+
+const left = [
+  { href: '/films', label: 'Films' },
+  { href: '/music', label: 'Music' },
+];
+
+const right = [
+  { href: '/honors', label: 'Honors' },
+  { href: '/studio', label: 'Studio' },
+];
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-row">
+      <nav class="footer-left label" aria-label="Catalog">
+        {left.map((l) => <a href={l.href}>{l.label}</a>)}
+      </nav>
+      <a href="/" class="footer-mark" aria-label="Wise Owl. Back to the index.">
+        <img src="/wordmark_red-velvet.svg" alt="" width="684" height="244" loading="lazy" />
+      </a>
+      <nav class="footer-right label" aria-label="Studio">
+        {right.map((l) => <a href={l.href}>{l.label}</a>)}
+      </nav>
+    </div>
+
+    <p class="colophon label mute">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <span>{site.city}</span>
+      <span>Est. {site.established}</span>
+      <span>© {year} {site.name}</span>
+    </p>
+  </div>
+</footer>

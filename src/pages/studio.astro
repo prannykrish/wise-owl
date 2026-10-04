@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Studio">
+  <section class="studio wrap">
+    <h1 class="page-title">Studio</h1>
+    <div class="studio-body">
+      {site.studio.map((p) => <p>{p}</p>)}
+      <p>
+        For screenings, commissions or press, write to
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,110 @@
+---
+import { MEDIUMS, catalogNumber, workHref, type Work, type Medium } from '../lib/works';
+
+interface Props {
+  works: Work[];
+  active: Medium | 'all';
+  /** What the side panel shows before anything is hovered. Defaults to the featured work. */
+  defaultWork?: Work;
+}
+
+const { works, active, defaultWork } = Astro.props;
+
+const tabs = [
+  { key: 'all', href: '/', label: 'All' },
+  ...(Object.keys(MEDIUMS) as Medium[]).map((k) => ({ key: k, href: `/${MEDIUMS[k].path}`, label: MEDIUMS[k].label })),
+];
+
+/** What the side panel shows for a work: its image, or its logline if it has no image yet. */
+const preview = (w: Work) => ({
+  src: w.data.image ?? '',
+  text: w.data.image ? '' : (w.data.logline ?? ''),
+  caption: `${catalogNumber(w.data.number)} · ${w.data.title} · ${w.data.year}`,
+  medium: w.data.medium,
+});
+
+const first = defaultWork ?? works.find((w) => w.data.featured) ?? works[0];
+const initial = first ? preview(first) : null;
+---
+
+<section class="catalog">
+  <div class="list">
+    <div class="tabs label">
+      {tabs.map((t) => <a href={t.href} class:list={{ active: t.key === active }}>{t.label}</a>)}
+      <span class="count mute">{works.length} {works.length === 1 ? 'work' : 'works'}</span>
+    </div>
+
+    {
+      works.length === 0 ? (
+        <p class="empty">Nothing in the catalog yet.</p>
+      ) : (
+        <ol class="rows">
+          {works.map((w) => {
+            const p = preview(w);
+            return (
+              <li>
+                <a
+                  class="row"
+                  href={workHref(w)}
+                  data-src={p.src}
+                  data-text={p.text}
+                  data-caption={p.caption}
+                  data-medium={p.medium}
+                >
+                  <span class="mono no">{catalogNumber(w.data.number)}</span>
+                  <span class="title">{w.data.title}</span>
+                  <span class="mono form">{w.data.form}</span>
+                  <span class="mono year">{w.data.year}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      )
+    }
+  </div>
+
+  {
+    initial && (
+      <aside class="panel" aria-hidden="true">
+        <div class="frame" data-medium={initial.medium}>
+          <img class="panel-img" src={initial.src} alt="" hidden={!initial.src} />
+          <p class="panel-text" hidden={!initial.text}>
+            {initial.text}
+          </p>
+        </div>
+        <p class="caption mono mute">{initial.caption}</p>
+      </aside>
+    )
+  }
+</section>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('.panel');
+  if (panel) {
+    const frame = panel.querySelector<HTMLElement>('.frame')!;
+    const img = panel.querySelector<HTMLImageElement>('.panel-img')!;
+    const text = panel.querySelector<HTMLElement>('.panel-text')!;
+    const caption = panel.querySelector<HTMLElement>('.caption')!;
+
+    const show = (row: HTMLElement) => {
+      const { src = '', text: t = '', caption: c = '', medium = '' } = row.dataset;
+      frame.dataset.medium = medium;
+      if (src) {
+        if (img.getAttribute('src') !== src) img.src = src;
+        img.hidden = false;
+        text.hidden = true;
+      } else {
+        text.textContent = t;
+        text.hidden = false;
+        img.hidden = true;
+      }
+      caption.textContent = c;
+    };
+
+    document.querySelectorAll<HTMLElement>('.row').forEach((row) => {
+      row.addEventListener('mouseenter', () => show(row));
+      row.addEventListener('focus', () => show(row));
+    });
+  }
+</script>
