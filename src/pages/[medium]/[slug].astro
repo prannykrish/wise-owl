@@ -45,7 +45,7 @@ const player = playerSrc(d.player);
     }
 
     <div class="wrap">
-      <header class="record-head">
+      <header class:list={['record-head', { 'has-posters': d.posters.length > 0 }]}>
         {d.medium === 'music' && d.image && <img class="cover" src={d.image} alt={`${d.title}, cover`} />}
         <div class="record-intro">
           <p class="label meta">{meta.map((m) => <span>{m}</span>)}</p>
@@ -72,6 +72,32 @@ const player = playerSrc(d.player);
             )
           }
         </div>
+        {
+          d.posters.length > 0 && (
+            <div class="posters" data-posters>
+              <div class="posters-track">
+                {d.posters.map((p, n) => (
+                  <a href={p} target="_blank" rel="noopener">
+                    <img src={p} alt={`${d.title}, poster ${n + 1}`} loading="lazy" />
+                  </a>
+                ))}
+              </div>
+              {d.posters.length > 1 && (
+                <div class="posters-nav">
+                  <button type="button" data-prev aria-label="Previous poster">
+                    ←
+                  </button>
+                  <span class="mono mute" data-count>
+                    1 / {d.posters.length}
+                  </span>
+                  <button type="button" data-next aria-label="Next poster">
+                    →
+                  </button>
+                </div>
+              )}
+            </div>
+          )
+        }
       </header>
 
       {
@@ -161,6 +187,29 @@ const player = playerSrc(d.player);
       }
 
       {
+        d.press.length > 0 && (
+          <section class="press">
+            <h2 class="label mute">Press</h2>
+            <ul class="press-list">
+              {d.press.map((p) => (
+                <li>
+                  <a href={p.url} target="_blank" rel="noopener">
+                    <span>
+                      <span class="t">{p.title}</span>
+                      <span class="outlet">{[p.outlet, p.date].filter(Boolean).join(' · ')}</span>
+                    </span>
+                    <span class="mono mute" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
         hasNotes && (
           <div class="prose">
             <Content />
@@ -213,6 +262,20 @@ const player = playerSrc(d.player);
 </Base>
 
 <script>
+  document.querySelectorAll<HTMLElement>('[data-posters]').forEach((el) => {
+    const track = el.querySelector<HTMLElement>('.posters-track')!;
+    const count = el.querySelector<HTMLElement>('[data-count]');
+    const total = track.children.length;
+    const index = () => Math.round(track.scrollLeft / track.clientWidth);
+    const go = (n: number) => track.scrollTo({ left: ((n + total) % total) * track.clientWidth, behavior: 'smooth' });
+
+    el.querySelector('[data-prev]')?.addEventListener('click', () => go(index() - 1));
+    el.querySelector('[data-next]')?.addEventListener('click', () => go(index() + 1));
+    track.addEventListener('scroll', () => {
+      if (count) count.textContent = `${index() + 1} / ${total}`;
+    });
+  });
+
   const button = document.querySelector<HTMLButtonElement>('[data-lights]');
   const theater = document.querySelector<HTMLElement>('.theater');
 

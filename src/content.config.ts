@@ -25,6 +25,12 @@ const works = defineCollection({
     image: z.string().optional(),
     /** Extra stills for the strip at the bottom of a film record. */
     stills: z.array(z.string()).default([]),
+    /** Posters and other key art. Shown beside the title, as a carousel when there is more than one. */
+    posters: z.array(z.string()).default([]),
+    /** Articles, reviews and interviews about the work. Listed after the stills. */
+    press: z
+      .array(z.object({ title: z.string(), outlet: z.string(), url: z.string(), date: z.string().optional() }))
+      .default([]),
     credits: z
       .array(z.object({ role: z.string(), names: z.array(z.string()) }))
       .default([]),

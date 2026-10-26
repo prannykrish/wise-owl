@@ -555,6 +555,56 @@ code {
   background: var(--paper-2);
 }
 
+/* Posters sit beside the title. One at a time, swipe or arrow through the rest. */
+.record-head.has-posters {
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 320px);
+}
+
+.record.music .record-head.has-posters {
+  grid-template-columns: minmax(180px, 340px) minmax(0, 1fr) minmax(160px, 260px);
+}
+
+.posters-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  background: var(--paper-2);
+}
+
+.posters-track::-webkit-scrollbar {
+  display: none;
+}
+
+.posters-track a {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.posters-track img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: contain;
+}
+
+.posters-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.posters-nav button {
+  padding: 6px 2px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.posters-nav button:hover {
+  color: var(--velvet);
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;
@@ -754,6 +804,53 @@ code {
   background: var(--paper-2);
 }
 
+.press {
+  margin-top: clamp(40px, 6vw, 88px);
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.press h2 {
+  margin-bottom: 18px;
+}
+
+.press-list {
+  max-width: 760px;
+}
+
+.press-list a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.press-list li:first-child a {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.press-list .t {
+  display: block;
+  font-size: 20px;
+  line-height: 1.25;
+  transition: color 0.15s ease;
+}
+
+.press-list a:hover .t {
+  color: var(--velvet);
+}
+
+.press-list .outlet {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+
 .pager {
   display: flex;
   justify-content: space-between;
@@ -787,11 +884,14 @@ code {
 }
 
 @media (max-width: 760px) {
-  .record.music .record-head {
+  .record.music .record-head,
+  .record-head.has-posters,
+  .record.music .record-head.has-posters {
     grid-template-columns: 1fr;
   }
 
-  .record .cover {
+  .record .cover,
+  .posters {
     max-width: 320px;
   }
 

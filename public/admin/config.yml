@@ -96,6 +96,26 @@ collections:
         summary: '{{fields.still}}'
         field: { label: Still, name: still, widget: image }
         hint: Films. The strip at the bottom of the record.
+      - label: Posters
+        name: posters
+        widget: list
+        required: false
+        collapsed: false
+        summary: '{{fields.poster}}'
+        field: { label: Poster, name: poster, widget: image }
+        hint: Posters and other key art. Shown beside the title. With more than one, visitors can arrow through them.
+      - label: Press
+        name: press
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{fields.outlet}} · {{fields.title}}'
+        hint: Articles, reviews and interviews about the work. Listed after the stills.
+        fields:
+          - { label: Headline, name: title, widget: string }
+          - { label: Outlet, name: outlet, widget: string, hint: 'The publication. For example: IndieWire' }
+          - { label: URL, name: url, widget: string }
+          - { label: Date, name: date, widget: string, required: false, hint: 'Optional. For example: March 2025' }
       - label: Credits
         name: credits
         widget: list
