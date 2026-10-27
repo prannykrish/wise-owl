@@ -350,9 +350,39 @@ code {
   text-wrap: balance;
 }
 
-/* Under the hero the nav's fade would show as a haze on the image. */
+/* Over a hero the nav floats on the image with no paper behind it, and takes its paper back once the image has scrolled away. */
+.has-hero .nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: transparent;
+  color: var(--paper);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
 .has-hero .nav::after {
-  display: none;
+  top: 0;
+  height: 140%;
+  background: linear-gradient(rgba(23, 21, 18, 0.45), transparent);
+  transition: opacity 0.25s ease;
+}
+
+.has-hero .nav.solid {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.has-hero .nav.solid::after {
+  opacity: 0;
+}
+
+.has-hero .nav-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.has-hero .hero {
+  height: 100dvh;
 }
 
 .has-hero .catalog {

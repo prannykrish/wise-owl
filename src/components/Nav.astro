@@ -1,7 +1,7 @@
 ---
 /**
  * The nav. Links split left and right, the logo alone in the middle.
- * The logo file is used exactly as supplied, never redrawn or recolored.
+ * The logo is the supplied file with only its paper background removed, so it can sit on a hero image. Never redrawn or recolored.
  */
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -34,7 +34,7 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
       }
     </nav>
     <a href="/" class="mark" aria-label="Wise Owl. Back to the index.">
-      <img src="/owl-head-o_red-velvet.svg" alt="" width="120" height="120" />
+      <img src="/owl-head-o_red-velvet_clear.svg" alt="" width="120" height="120" />
     </a>
     <nav class="nav-right" aria-label="Studio">
       {
@@ -51,3 +51,14 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
     </nav>
   </div>
 </header>
+
+<script>
+  // On hero pages the nav sits on the image; it turns solid once the image is out from under it.
+  const nav = document.querySelector<HTMLElement>('.nav');
+  const hero = document.querySelector('.has-hero .hero, .has-hero .band');
+  if (nav && hero) {
+    new IntersectionObserver(([entry]) => nav.classList.toggle('solid', !entry.isIntersecting), {
+      rootMargin: `-${nav.offsetHeight}px 0px 0px 0px`,
+    }).observe(hero);
+  }
+</script>

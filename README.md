@@ -40,7 +40,7 @@ Set `featured: true` on the one work that fills the first screen of the index. G
 
 - Colors and type: the tokens at the top of `src/styles/global.css`.
 - Fonts: the Google Fonts link in `src/layouts/Base.astro`.
-- The logo: `public/owl-head-o_red-velvet.svg`, used as supplied. Its height in the nav is `--logo-h` in `global.css`. The favicon is `public/favicon.svg`, the same owl without its background. The wordmark in the footer is `public/wordmark_red-velvet.svg`.
+- The logo: `public/owl-head-o_red-velvet.svg`, as supplied. The nav uses `public/owl-head-o_red-velvet_clear.svg`, the same file with only its paper background removed so it can sit on a hero image. Its height in the nav is `--logo-h` in `global.css`. The favicon is `public/favicon.svg`, the same owl without its background. The wordmark in the footer is `public/wordmark_red-velvet.svg`.
 - Contact details, established year and the Studio page text: `src/data/site.json`, or the Studio section of the admin.
 - Nav links: `src/components/Nav.astro`. Footer: `src/components/Footer.astro`.
 - Studio page copy: `src/pages/studio.astro`.

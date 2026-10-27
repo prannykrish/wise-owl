@@ -27,7 +27,7 @@ Never: taglines, "we craft stories," laurels graphics, parallax, custom cursors,
 
 ## Logo and nav
 
-The logo is the supplied file `public/owl-head-o_red-velvet.svg`: a red velvet head with a paper face. It is used exactly as supplied, never redrawn or recolored. It appears once per screen, alone in the middle of the nav, in the manner of A24. The favicon, `public/favicon.svg`, is the same shapes with the background removed and the view cropped to the head, so the tab shows just the owl; `favicon-32.png` and `apple-touch-icon.png` are renders of it for browsers that ignore SVG icons.
+The logo is the supplied file `public/owl-head-o_red-velvet.svg`: a red velvet head with a paper face. It is used exactly as supplied, never redrawn or recolored. It appears once per screen, alone in the middle of the nav, in the manner of A24. The nav uses `public/owl-head-o_red-velvet_clear.svg`, the same shapes with the paper background removed, because the nav floats over hero images. The favicon, `public/favicon.svg`, is the same shapes with the background removed and the view cropped to the head, so the tab shows just the owl; `favicon-32.png` and `apple-touch-icon.png` are renders of it for browsers that ignore SVG icons.
 
 The site's paper and red velvet tokens are taken from the colors inside the logo file, so the logo sits on the page without a visible edge. If the logo file changes, retune those two tokens first.
 
