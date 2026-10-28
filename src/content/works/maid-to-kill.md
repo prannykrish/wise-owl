@@ -20,6 +20,19 @@ stills:
   - /stills/whatsapp-image-2026-09-30-at-3.44.24-pm.jpeg
   - /stills/whatsapp-image-2026-10-03-at-1.32.30-pm.jpeg
   - /stills/whatsapp-image-2026-10-03-at-1.32.07-pm.jpeg
+press:
+  - title: Aggie filmmakers to debut feature film
+    outlet: The Battalion
+    url: https://thebatt.com/life-arts/aggie-filmmakers-to-debut-feature-film/
+    date: November 2024
+  - title: Student film ‘Maid to Kill’ slays its premiere
+    outlet: The Battalion
+    url: https://thebatt.com/uncategorized/student-film-maid-to-kill-slays-its-premiere/
+    date: November 2024
+  - title: Two Aggie students present comedy thriller ‘Maid to Kill’
+    outlet: The Eagle
+    url: https://theeagle.com/news/local/education/connor-nf-field-pranav-krishnan-tamu-campus-movie/article_db2717c6-acfe-11ef-8c2b-3796a84821d5.html
+    date: November 2024
 credits:
   - role: Writers
     names:
